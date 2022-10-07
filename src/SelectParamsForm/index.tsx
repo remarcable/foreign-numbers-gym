@@ -15,11 +15,11 @@ import {
 } from "@chakra-ui/react";
 import { levels } from "../levels";
 import { useRouter } from "next/router";
+import { getVoices } from "../util/getVoices";
 
 const languageNames = new Intl.DisplayNames(["en"], { type: "language" });
-const getSpeechSynthesisLocales = () =>
-  window.speechSynthesis
-    .getVoices()
+const getSpeechSynthesisLocales = (voices) =>
+  voices
     .map((voice) => ({
       locale: voice.lang,
       displayName: languageNames.of(voice.lang) ?? "-",
@@ -39,33 +39,31 @@ const SelectParamsForm = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const setLocales = () => {
-      const locales = getSpeechSynthesisLocales();
+    const fn = async () => {
+      const voices = await getVoices();
+      const locales = getSpeechSynthesisLocales(voices);
+      console.log(locales);
 
-      if (locales.length > 0) {
-        setLocalesToState(locales);
-      } else {
-        setTimeout(() => setLocales(), 200);
-      }
+      setLocalesToState(locales);
     };
 
-    setLocales();
+    fn();
   }, [setLocalesToState]);
 
   const formik = useFormik({
     initialValues: {
       language: "en-US",
-      level: "easy",
+      level: "Easy",
     },
     onSubmit: (values) => {
-      router.push(`/${values.language}/${values.level}`);
+      router.push(`/${values.language}/${values.level.toLowerCase()}`);
     },
   });
   return (
     <Flex bg="gray.100" align="center" justify="center" h="100vh" w="100vw">
       <Box bg="white" p={6} rounded="md">
         <form onSubmit={formik.handleSubmit}>
-          <VStack spacing={4} align="flex-start" minW="xl">
+          <VStack spacing={4} align="flex-start" minW="sm">
             <Heading size="lg">Learn Numbers</Heading>
             <FormControl>
               <FormLabel htmlFor="language">Language</FormLabel>
