@@ -10,9 +10,15 @@ export const pronounceText = async ({
   const synth = window.speechSynthesis;
   const voices = await getVoices();
 
-  const voiceForLocale = voices.find((voice) => voice.lang === locale);
+  const voiceForLocale = voices.find((voice: any) => voice.lang === locale);
 
   const utterance = new SpeechSynthesisUtterance(text);
+
+  if (!voiceForLocale) {
+    console.log("No voice found for locale");
+    return;
+  }
+
   utterance.voice = voiceForLocale;
 
   synth.speak(utterance);

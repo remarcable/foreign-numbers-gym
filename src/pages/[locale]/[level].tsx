@@ -6,14 +6,10 @@ import { useFormik } from "formik";
 import {
   Box,
   Button,
-  Checkbox,
   Flex,
-  FormControl,
-  FormLabel,
   Input,
   Heading,
   VStack,
-  Select,
   Text,
   InputRightElement,
   InputGroup,
@@ -22,20 +18,27 @@ import { useCallback, useMemo, useState } from "react";
 import { levels } from "levels";
 import { pronounceText } from "util/pronounceText";
 
-const getNumber = ({ locale, level }) =>
+const getNumber = ({ locale, level }: { locale: string; level: string }) =>
   levels
-    .find((l) => l.name.toLowerCase() === level?.toLowerCase())
+    .find(
+      (l: typeof levels[number]) =>
+        l.name.toLowerCase() === level?.toLowerCase()
+    )
     ?.getNumber(locale);
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const { locale, level } = router.query;
+  const locale: string = router.query.locale as string;
+  const level: string = router.query.level as string;
 
-  const [currentNumber, setCurrentNumber] = useState(null);
-  const [guessingResult, setGuessingResult] = useState(null);
+  const [currentNumber, setCurrentNumber] = useState<string | null>(null);
+  const [guessingResult, setGuessingResult] = useState<boolean | null>(null);
 
   const levelObject = useMemo(
-    () => levels.find((l) => l.name.toLowerCase() === level?.toLowerCase()),
+    () =>
+      levels.find(
+        (l: any) => l.name.toLowerCase() === (level as string)?.toLowerCase()
+      ),
     [level]
   );
 
@@ -51,12 +54,20 @@ const Home: NextPage = () => {
   const setNewNumber = useCallback(() => {
     const newNumber = getNumber({ locale, level });
 
+    if (!newNumber) {
+      throw new Error("No number generated!");
+    }
+
     setCurrentNumber(newNumber);
     setGuessingResult(null);
     pronounceText({ text: newNumber, locale });
   }, [setCurrentNumber, setGuessingResult, level, locale]);
 
   const pronounceCurrentNumber = useCallback(() => {
+    if (!currentNumber) {
+      throw new Error("Generate number first");
+    }
+
     pronounceText({ text: currentNumber, locale });
   }, [currentNumber, locale]);
 

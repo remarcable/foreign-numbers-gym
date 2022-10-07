@@ -1,24 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 
 import {
   Box,
   Button,
-  Checkbox,
   Flex,
   FormControl,
   FormLabel,
-  Input,
   Heading,
   VStack,
   Select,
 } from "@chakra-ui/react";
 import { levels } from "../levels";
 import { useRouter } from "next/router";
-import { getVoices } from "../util/getVoices";
+import { getVoices, Voices } from "../util/getVoices";
 
 const languageNames = new Intl.DisplayNames(["en"], { type: "language" });
-const getSpeechSynthesisLocales = (voices) =>
+const getSpeechSynthesisLocales = (voices: Voices) =>
   voices
     .map((voice) => ({
       locale: voice.lang,

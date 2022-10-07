@@ -1,4 +1,4 @@
-export const getVoices = async () => {
+export const getVoices = async (): Promise<Voices> => {
   const synth = window.speechSynthesis;
   const voices = synth.getVoices();
 
@@ -10,5 +10,8 @@ export const getVoices = async () => {
   return voices;
 };
 
+export type Voices = ReturnType<typeof window.speechSynthesis.getVoices>;
+export type Voice = Voices[number];
+
 const wait = async (timeout: number) =>
-  new Promise((resolve) => setTimeout(() => resolve(), timeout));
+  new Promise((resolve) => setTimeout(() => resolve(null), timeout));
