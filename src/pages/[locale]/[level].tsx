@@ -47,7 +47,7 @@ const Home: NextPage = () => {
       guess: "",
     },
     onSubmit: ({ guess }) => {
-      setGuessingResult(guess === currentNumber);
+      setGuessingResult(guess.toString() === currentNumber);
     },
   });
 
