@@ -5,18 +5,22 @@ import { DateTime } from "luxon";
 export const levels = [
   {
     name: "Easy",
+    inputType: "number",
     getNumber: () => random(0, 20),
   },
   {
     name: "Medium",
+    inputType: "number",
     getNumber: () => random(0, 100),
   },
   {
     name: "Hard",
+    inputType: "number",
     getNumber: () => random(0, 1000),
   },
   {
     name: "Dates",
+    inputType: "date",
     getNumber: (locale) => {
       // TODO: generate better dates (also BC, and for months with 31 days, etc)
       return DateTime.fromObject({
@@ -28,6 +32,7 @@ export const levels = [
   },
   {
     name: "Time",
+    inputType: "time",
     getNumber: (locale) => {
       return DateTime.fromObject({
         hour: random(0, 23),

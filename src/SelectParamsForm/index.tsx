@@ -42,7 +42,6 @@ const SelectParamsForm = () => {
     const fn = async () => {
       const voices = await getVoices();
       const locales = getSpeechSynthesisLocales(voices);
-      console.log(locales);
 
       setLocalesToState(locales);
     };
